@@ -1,0 +1,42 @@
+# version: '3.7'
+
+# services:
+#   negare.db:
+#     image: postgres:16-alpine
+#     environment:
+#       - POSTGRES_USER=postgres
+#       - POSTGRES_PASSWORD=Password123
+#       - POSTGRES_DB=NegareDB
+#     volumes:
+#       - NegareDbData:/var/lib/postgresql/data/
+#     ports:
+#       - 5432:5432
+#     restart: on-failure
+#     healthcheck:
+#       test: [ "CMD-SHELL", "pg_isready -q -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+#       timeout: 10s
+#       interval: 5s
+#       retries: 10
+
+# volumes:
+#   NegareDbData:
+
+services:
+  negare_db:
+    build:
+      context: .
+      dockerfile: postgres.dockerfile
+    image: "postgres:latest"
+    container_name: ${PG_CONTAINER_NAME}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA}
+    volumes:
+       - negare:/data/negare_db
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+volumes:
+    negare:
