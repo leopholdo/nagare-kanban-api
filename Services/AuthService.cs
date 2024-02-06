@@ -6,6 +6,7 @@ namespace negare_kanban_api.Services.BoardsService
   public interface IAuthService 
   {
     User? GetUser(int? id, string? email);
+    List<UserDTO>? GetUsers(int? id, string? email);
     Task<User> Register(UserDTO userDTO);
     Task<User> Update(UserDTO userDTO);
     Task<User> UpdatePassword(UserDTO userDTO);
@@ -28,6 +29,23 @@ namespace negare_kanban_api.Services.BoardsService
           u.Email == email
         )
         .FirstOrDefault();
+
+      return user;
+    }
+
+    public List<UserDTO>? GetUsers(int? id, string? email)
+    {
+      var user = _context.Users
+        .Select(user => new UserDTO {
+          Id = user.Id,
+          Email = user.Email,
+          Name = user.Name ?? string.Empty
+        })
+        .Where(u => 
+          u.Id == id ||
+          u.Email == email
+        )
+        .ToList();
 
       return user;
     }

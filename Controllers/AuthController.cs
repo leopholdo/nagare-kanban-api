@@ -16,8 +16,17 @@ namespace negare_kanban_api.Controllers
 
     public AuthController(IAuthService authService, ITokenService tokenService)
     {
-        _authService = authService;
-        _tokenService = tokenService;
+      _authService = authService;
+      _tokenService = tokenService;
+    }
+
+    [AllowAnonymous]
+    [HttpGet("UserExists")]
+    public ActionResult<bool> UserExists(string? email)
+    {
+      var user = _authService.GetUser(null, email);
+
+      return user != null;
     }
     
     [AllowAnonymous]
@@ -67,8 +76,10 @@ namespace negare_kanban_api.Controllers
         var token = _tokenService.Generate(user);
 
         return Ok(new {
-          Name = user.Name,
-          Email = user.Email,
+          User = new {
+            Name = user.Name,
+            Email = user.Email,
+          },
           Token = token
         });
       }

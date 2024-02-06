@@ -44,10 +44,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddCors(options =>
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+
+if(allowedOrigins != null)
 {
-    options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-});
+    // Add services to the container.
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("corsPolicy", policy =>
+        {
+            policy.WithOrigins(allowedOrigins)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+        });
+    });
+}
 
 // Services
 builder.Services.AddScoped<IBoardsService, BoardsService>();
@@ -65,9 +76,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("corsPolicy");
+
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("Open");
 
 app.MapControllers();
 
