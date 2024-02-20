@@ -48,16 +48,22 @@ namespace negare_kanban_api.Services.TokenService
 
     private static ClaimsIdentity GenerateClaims(User user)
     {
-      var ci = new ClaimsIdentity();
-      ci.AddClaim(new Claim("id", user.Id.ToString()));
-      
-      // if(user.Roles != null)
-      // {
-      //   foreach (var role in user.Roles)
-      //     ci.AddClaim(new Claim(ClaimTypes.Role, role));
-      // }
+      var authClaims = new List<Claim>
+      {
+          new Claim(ClaimTypes.Name, user.Email),
+          new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+          new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+      };
 
-      return ci;
+      return new ClaimsIdentity(authClaims);
+      
+      // // if(user.Roles != null)
+      // // {
+      // //   foreach (var role in user.Roles)
+      // //     ci.AddClaim(new Claim(ClaimTypes.Role, role));
+      // // }
+
+      // return ci;
     }
   }
 }

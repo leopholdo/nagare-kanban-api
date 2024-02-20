@@ -54,8 +54,9 @@ if(allowedOrigins != null)
         options.AddPolicy("corsPolicy", policy =>
         {
             policy.WithOrigins(allowedOrigins)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
         });
     });
 }
@@ -64,6 +65,7 @@ if(allowedOrigins != null)
 builder.Services.AddScoped<IBoardsService, BoardsService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

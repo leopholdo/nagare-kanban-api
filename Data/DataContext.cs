@@ -10,6 +10,7 @@ public class DataContext : DbContext
   }
 
   public DbSet<User> Users { get; set; } = null!;
+  public DbSet<UserImage> UserImages { get; set; } = null!;
   public DbSet<Board> Boards { get; set; } = null!;
   public DbSet<BoardList> BoardLists { get; set; } = null!;
   public DbSet<Tag> Tags { get; set; } = null!;
@@ -20,12 +21,16 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+      modelBuilder.Entity<UserImage>()
+        .Property(e => e.Image)
+        .HasColumnType("bytea");
+      
       modelBuilder.Entity<Card>()
-      .HasMany(e => e.Tags)
-      .WithMany();
+        .HasMany(e => e.Tags)
+        .WithMany();
 
       modelBuilder.Entity<Checklist>()
-      .HasMany(e => e.Users)
-      .WithMany();
+        .HasMany(e => e.Users)
+        .WithMany();
     }
 }
