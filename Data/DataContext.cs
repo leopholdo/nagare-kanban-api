@@ -12,6 +12,7 @@ public class DataContext : DbContext
   public DbSet<User> Users { get; set; } = null!;
   public DbSet<UserImage> UserImages { get; set; } = null!;
   public DbSet<Board> Boards { get; set; } = null!;
+  public DbSet<BoardUserLog> BoardUserLogs { get; set; } = null!;
   public DbSet<BoardList> BoardLists { get; set; } = null!;
   public DbSet<Tag> Tags { get; set; } = null!;
   public DbSet<Card> Cards { get; set; } = null!;

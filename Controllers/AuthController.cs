@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using negare_kanban_api.Models;
-using negare_kanban_api.Services.BoardsService;
+using negare_kanban_api.Services.AuthService;
 using negare_kanban_api.Services.TokenService;
 
 namespace negare_kanban_api.Controllers

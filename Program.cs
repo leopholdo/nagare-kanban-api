@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using negare_kanban_api.Data;
-using negare_kanban_api.Services.BoardsService;
+using negare_kanban_api.Services.AuthService;
+using negare_kanban_api.Services.BoardService;
 using negare_kanban_api.Services.TokenService;
+using negare_kanban_api.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,7 +64,7 @@ if(allowedOrigins != null)
 }
 
 // Services
-builder.Services.AddScoped<IBoardsService, BoardsService>();
+builder.Services.AddScoped<IBoardService, BoardService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();

@@ -2,7 +2,7 @@ namespace negare_kanban_api.Models;
 
 public class Card
 {
-  public long Id { get; set; }
+  public int Id { get; set; }
   public string? Name { get; set; }
   public DateTime DueDate { get; set; }
   public DateTime DueComplete { get; set; }

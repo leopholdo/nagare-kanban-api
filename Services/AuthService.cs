@@ -1,7 +1,7 @@
 using negare_kanban_api.Data;
 using negare_kanban_api.Models;
 
-namespace negare_kanban_api.Services.BoardsService
+namespace negare_kanban_api.Services.AuthService
 {
   public interface IAuthService 
   {

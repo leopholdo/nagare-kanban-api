@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using negare_kanban_api.Data;
@@ -11,9 +12,11 @@ using negare_kanban_api.Data;
 namespace negare_kanban_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240222183438_ChangeBoardAlterBackground")]
+    partial class ChangeBoardAlterBackground
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,8 +27,8 @@ namespace negare_kanban_api.Migrations
 
             modelBuilder.Entity("CardTag", b =>
                 {
-                    b.Property<int>("CardId")
-                        .HasColumnType("integer");
+                    b.Property<long>("CardId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("TagsId")
                         .HasColumnType("integer");
@@ -34,7 +37,7 @@ namespace negare_kanban_api.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("CardTag", (string)null);
+                    b.ToTable("CardTag");
                 });
 
             modelBuilder.Entity("ChecklistUser", b =>
@@ -49,7 +52,7 @@ namespace negare_kanban_api.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("ChecklistUser", (string)null);
+                    b.ToTable("ChecklistUser");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.Action", b =>
@@ -60,8 +63,8 @@ namespace negare_kanban_api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CardId")
-                        .HasColumnType("integer");
+                    b.Property<long>("CardId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Content")
                         .HasColumnType("text");
@@ -90,16 +93,16 @@ namespace negare_kanban_api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Actions", (string)null);
+                    b.ToTable("Actions");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.Board", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("BackgroundImage")
                         .HasColumnType("text");
@@ -126,19 +129,19 @@ namespace negare_kanban_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Boards", (string)null);
+                    b.ToTable("Boards");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.BoardList", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<int>("BoardId")
-                        .HasColumnType("integer");
+                    b.Property<long>("BoardId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -150,42 +153,16 @@ namespace negare_kanban_api.Migrations
 
                     b.HasIndex("BoardId");
 
-                    b.ToTable("BoardLists", (string)null);
-                });
-
-            modelBuilder.Entity("negare_kanban_api.Models.BoardUserLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BoardId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("Date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BoardId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BoardUserLogs", (string)null);
+                    b.ToTable("BoardLists");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.Card", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("bigint");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<bool>("Closed")
                         .HasColumnType("boolean");
@@ -204,7 +181,7 @@ namespace negare_kanban_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cards", (string)null);
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.Checklist", b =>
@@ -215,8 +192,8 @@ namespace negare_kanban_api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CardId")
-                        .HasColumnType("integer");
+                    b.Property<long>("CardId")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("timestamp without time zone");
@@ -231,7 +208,7 @@ namespace negare_kanban_api.Migrations
 
                     b.HasIndex("CardId");
 
-                    b.ToTable("Checklists", (string)null);
+                    b.ToTable("Checklists");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.ChecklistItem", b =>
@@ -261,7 +238,7 @@ namespace negare_kanban_api.Migrations
 
                     b.HasIndex("ChecklistId");
 
-                    b.ToTable("ChecklistItems", (string)null);
+                    b.ToTable("ChecklistItems");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.Tag", b =>
@@ -280,7 +257,7 @@ namespace negare_kanban_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.User", b =>
@@ -307,7 +284,7 @@ namespace negare_kanban_api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.UserImage", b =>
@@ -334,7 +311,7 @@ namespace negare_kanban_api.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserImages", (string)null);
+                    b.ToTable("UserImages");
                 });
 
             modelBuilder.Entity("CardTag", b =>
@@ -393,25 +370,6 @@ namespace negare_kanban_api.Migrations
                         .IsRequired();
 
                     b.Navigation("Board");
-                });
-
-            modelBuilder.Entity("negare_kanban_api.Models.BoardUserLog", b =>
-                {
-                    b.HasOne("negare_kanban_api.Models.Board", "Board")
-                        .WithMany()
-                        .HasForeignKey("BoardId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("negare_kanban_api.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Board");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("negare_kanban_api.Models.Checklist", b =>

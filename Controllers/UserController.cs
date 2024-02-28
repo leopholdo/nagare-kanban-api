@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using negare_kanban_api.Models;
-using negare_kanban_api.Services.BoardsService;
+using negare_kanban_api.Services.UserService;
 
 namespace negare_kanban_api.Controllers
 {
