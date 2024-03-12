@@ -25,7 +25,7 @@ namespace negare_kanban_api.Controllers
     }
 
     [HttpGet("GetBoard/{id}")]
-    public async Task<ActionResult<Board>> GetBoard(long id)
+    public async Task<ActionResult<Board>> GetBoard(int id)
     {
       var board = await _boardService.GetBoard(id);
 
@@ -54,7 +54,7 @@ namespace negare_kanban_api.Controllers
     }
 
     [HttpPut("ReopenBoard/{id}")]
-    public async Task<IActionResult> ReopenBoard(long id)
+    public async Task<IActionResult> ReopenBoard(int id)
     {
       try
       {
@@ -77,7 +77,7 @@ namespace negare_kanban_api.Controllers
     }
 
     [HttpPut("CloseBoard/{id}")]
-    public async Task<IActionResult> CloseBoard(long id)
+    public async Task<IActionResult> CloseBoard(int id)
     {
       try
       {
@@ -100,7 +100,7 @@ namespace negare_kanban_api.Controllers
     }    
 
     [HttpDelete("DeleteBoard/{id}")]
-    public async Task<IActionResult> DeleteBoard(long id)
+    public async Task<IActionResult> DeleteBoard(int id)
     {
       try
       {

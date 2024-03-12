@@ -6,13 +6,13 @@ namespace negare_kanban_api.Services.BoardService
 {
   public interface IBoardService 
   {
-    Task<Board?> GetBoard(long id);
+    Task<Board?> GetBoard(int id);
     Task<List<Board>> GetBoards(string? name, bool? isClosed);
     Task<Board> CreateBoard(Board board);
     Task<Board> UpdateBoard(Board board);
-    Task ReopenBoard(long id);
-    Task CloseBoard(long id);
-    Task DeleteBoard(long id);
+    Task ReopenBoard(int id);
+    Task CloseBoard(int id);
+    Task DeleteBoard(int id);
     Task<List<Board>> GetBoardsFromLog(int userId);
     Task UpdateBoardUserLog(int boardId, int userId);
   }
@@ -26,7 +26,7 @@ namespace negare_kanban_api.Services.BoardService
       _context = context;
     }
 
-    public async Task<Board?> GetBoard(long id)
+    public async Task<Board?> GetBoard(int id)
     {
       var board = await _context.Boards.FindAsync(id);
 
@@ -67,7 +67,7 @@ namespace negare_kanban_api.Services.BoardService
       return board;
     }
 
-    public async Task CloseBoard(long id)
+    public async Task CloseBoard(int id)
     {
       await _context.Boards.Where(b => b.Id == id)
         .ExecuteUpdateAsync(b => b
@@ -76,7 +76,7 @@ namespace negare_kanban_api.Services.BoardService
         );
     }
 
-    public async Task ReopenBoard(long id)
+    public async Task ReopenBoard(int id)
     {
       await _context.Boards.Where(b => b.Id == id)
         .ExecuteUpdateAsync(b => b
@@ -85,7 +85,7 @@ namespace negare_kanban_api.Services.BoardService
         );
     }    
 
-    public async Task DeleteBoard(long id)
+    public async Task DeleteBoard(int id)
     {
       await _context.Boards.Where(b => b.Id == id).ExecuteDeleteAsync();
     }
@@ -94,7 +94,10 @@ namespace negare_kanban_api.Services.BoardService
     {
       var logs = await _context.BoardUserLogs
         .Include(b => b.Board)
-        .Where(b => b.User.Id == userId)
+        .Where(b => 
+          b.User.Id == userId &&
+          b.Board.IsClosed == false
+        )
         .OrderByDescending(b => b.Date)
         .ToListAsync();
 
