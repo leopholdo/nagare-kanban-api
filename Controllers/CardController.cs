@@ -44,6 +44,21 @@ namespace negare_kanban_api.Controllers
       }
     }
 
+    [HttpPut("TransferCards")]
+    public async Task<ActionResult> TransferCards([FromQuery]int origin, [FromQuery]int target, [FromQuery]bool top)
+    {
+      try
+      {
+        await _cardService.TransferCards(origin, target, top);
+
+        return NoContent();
+      }
+      catch (Exception e)
+      {
+        return BadRequest(e.Message);
+      }
+    }
+
     [HttpPut("UpdateCardPosition")]
     public async Task<ActionResult<Card>> UpdateCardPosition(CardDTO cardDTO)
     {

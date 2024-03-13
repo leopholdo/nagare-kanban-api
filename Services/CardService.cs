@@ -9,6 +9,7 @@ namespace negare_kanban_api.Services.CardService
     Task<List<Card>> GetCard(int cardId);
     Task<List<Card>> GetCards(int boardListId);
     Task<CardDTO> CreateCard(CardDTO cardDTO);
+    Task TransferCards(int originListId, int targetListId, bool top);
     Task<Card> UpdateCardPosition(CardDTO card);
     Task UpdateCard(CardDTO cardDTO);
     Task CloseCard(int id);
@@ -72,6 +73,40 @@ namespace negare_kanban_api.Services.CardService
       cardDTO.Position = position;
 
       return cardDTO;
+    }
+
+    public async Task TransferCards(int originListId, int targetListId, bool top)
+    {
+      var cards = await _context.Cards
+        .Where(c => c.BoardListId == originListId)
+        .ToListAsync();      
+
+      if(top) 
+      {
+        await _context.Cards.Where(c => 
+          c.BoardListId == targetListId          
+        ).ExecuteUpdateAsync(c => c
+          .SetProperty(x => x.Position, x => x.Position + cards.Count)
+        );
+
+        for(int i = 0; i < cards.Count; i++)
+        {
+          cards[i].Position = i;
+          cards[i].BoardListId = targetListId;
+        }
+      }
+      else
+      {
+        var maxPosition = await _context.Cards.CountAsync(c => c.BoardListId == targetListId);
+
+        for(int i = 0; i < cards.Count; i++)
+        {
+          cards[i].Position = i + maxPosition;
+          cards[i].BoardListId = targetListId;
+        }
+      }
+
+      await _context.SaveChangesAsync();
     }
 
     public async Task<Card> UpdateCardPosition(CardDTO cardDTO)
