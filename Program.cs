@@ -13,24 +13,20 @@ using negare_kanban_api.Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// TODO - Adicionar descrição
-// Se quiser usar database in memory, descomentar essa parte:
+// DATABASE
+// If you want to use database in memory, uncomment this part (lines 23~25):
 // builder.Services.AddDbContext<DataContext>(opt => 
 //     opt.UseInMemoryDatabase("NegareKanban")
 // );
 
+// If you want to use the PostgreSQL database, uncomment this part (lines 28~30):
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
 var conn = builder.Configuration.GetConnectionString("DefaultConnection");
-
 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(conn));
 
 // Configure JWT authentication
