@@ -6,6 +6,7 @@
 
 Este projeto visa criar uma ferramenta de gerenciamento de projetos, oferecendo uma plataforma flexível para organizar tarefas em quadros e listas, proporcionando uma experiência de gerenciamento de projetos intuitiva e colaborativa.
 
+
 # Planejamento do projeto
 
 Afim de um desenvolvimento mais ágil usando a metodologia SCRUM e levando em consideração a ideia do "Dev em T", o projeto foi desenhado no **Figma** e planejado no **Trello**.
