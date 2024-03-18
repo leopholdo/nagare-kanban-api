@@ -6,7 +6,7 @@ namespace negare_kanban_api.Services.BoardService
 {
   public interface IBoardService 
   {
-    Task<Board?> GetBoard(int id);
+    Task<Board?> GetBoard(int id, int userId);
     Task<List<Board>> GetBoards(string? name, bool? isClosed);
     Task<Board> CreateBoard(Board board);
     Task<Board> UpdateBoard(Board board);
@@ -15,6 +15,8 @@ namespace negare_kanban_api.Services.BoardService
     Task DeleteBoard(int id);
     Task<List<Board>> GetBoardsFromLog(int userId);
     Task UpdateBoardUserLog(int boardId, int userId);
+    Task<List<Board>> GetUserFavorites(int userId);
+    Task UpdateBoardUserFavorite(int boardId, int userId, bool favorite);
   }
   
   public class BoardService:IBoardService
@@ -26,9 +28,22 @@ namespace negare_kanban_api.Services.BoardService
       _context = context;
     }
 
-    public async Task<Board?> GetBoard(int id)
+    public async Task<Board?> GetBoard(int id, int userId)
     {
-      var board = await _context.Boards.FindAsync(id);
+      var board = await _context.Boards.FindAsync(id);   
+
+      if(board == null)
+      {
+        return null;
+      }
+
+      var isFavorite = _context.BoardUserFavorites
+        .Where(f => 
+          f.UserId == userId &&
+          f.BoardId == id
+        ).AsNoTracking().FirstOrDefault();
+
+      board.Favorite = isFavorite != null;
 
       return board;
     }
@@ -61,7 +76,6 @@ namespace negare_kanban_api.Services.BoardService
           .SetProperty(b => b.Name, board.Name)
           .SetProperty(b => b.Color, board.Color)
           .SetProperty(b => b.BackgroundImage, board.BackgroundImage)
-          .SetProperty(b => b.Favorite, board.Favorite)
         );
 
       return board;
@@ -146,6 +160,52 @@ namespace negare_kanban_api.Services.BoardService
       );
 
       _context.SaveChanges();
+    }
+
+    public async Task<List<Board>> GetUserFavorites(int userId)
+    {
+      var favorites = await _context.BoardUserFavorites
+        .Include(b => b.Board)
+        .Where(b => 
+          b.User.Id == userId &&
+          b.Board.IsClosed == false
+        )
+        .OrderByDescending(b => b.Id)
+        .ToListAsync();
+
+      return favorites.Select(l => l.Board).ToList();
+    }
+
+    public async Task UpdateBoardUserFavorite(int boardId, int userId, bool favorite)
+    {
+      var element = _context.BoardUserFavorites.FirstOrDefault(f => 
+        f.UserId == userId &&
+        f.BoardId == boardId
+      );
+
+      if(favorite == false) 
+      {
+        if(element != null)
+        {
+          await _context.BoardUserFavorites.Where(f => f.Id == element.Id).ExecuteDeleteAsync();
+        }
+      }
+      else 
+      {
+        if(element != null)
+        {
+          return;
+        }
+        
+        _context.BoardUserFavorites.Add(
+          new BoardUserFavorite {
+            UserId = userId,
+            BoardId = boardId
+          }
+        );
+
+        _context.SaveChanges();
+      }
     }
   }
 }

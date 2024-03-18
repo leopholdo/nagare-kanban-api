@@ -27,7 +27,14 @@ namespace negare_kanban_api.Controllers
     [HttpGet("GetBoard/{id}")]
     public async Task<ActionResult<Board>> GetBoard(int id)
     {
-      var board = await _boardService.GetBoard(id);
+      var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+
+      if(userId == null) 
+      {
+        return Unauthorized();
+      }
+
+      var board = await _boardService.GetBoard(id, int.Parse(userId.Value));
 
       if (board == null)
       {
@@ -148,6 +155,36 @@ namespace negare_kanban_api.Controllers
       }
 
       await _boardService.UpdateBoardUserLog(boardId, int.Parse(userId.Value));
+
+      return NoContent();
+    }
+
+    [HttpGet("GetUserFavorites")]
+    public async Task<IActionResult> GetUserFavorites()
+    {
+      var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+
+      if(userId == null) 
+      {
+        return Unauthorized();
+      }
+
+      var boards = await _boardService.GetUserFavorites(int.Parse(userId.Value));
+
+      return Ok(boards);
+    }
+
+    [HttpPut("UpdateBoardUserFavorite/{boardId}/{favorite}")]
+    public async Task<IActionResult> UpdateBoardUserFavorite(int boardId, bool favorite)
+    {
+      var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+
+      if(userId == null) 
+      {
+        return Unauthorized();
+      }
+
+      await _boardService.UpdateBoardUserFavorite(boardId, int.Parse(userId.Value), favorite);
 
       return NoContent();
     }
