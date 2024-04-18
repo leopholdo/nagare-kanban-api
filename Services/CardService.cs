@@ -11,7 +11,7 @@ namespace negare_kanban_api.Services.CardService
     Task<CardDTO> CreateCard(CardDTO cardDTO);
     Task TransferCards(int originListId, int targetListId, bool top);
     Task<Card> UpdateCardPosition(CardDTO card);
-    Task UpdateCard(CardDTO cardDTO);
+    Task<Card?> UpdateCard(CardDTO cardDTO);
     Task CloseCard(int id);
     Task OpenCard(int id);
     Task DeleteCard(int id);
@@ -170,17 +170,20 @@ namespace negare_kanban_api.Services.CardService
       return card;
     }
 
-    public async Task UpdateCard(CardDTO cardDTO)
+    public async Task<Card?> UpdateCard(CardDTO cardDTO)
     {
-      await _context.Cards
-        .Where(c => c.Id == cardDTO.Id)
-        .ExecuteUpdateAsync(c => c
-          .SetProperty(x => x.Name, x => cardDTO.Name ?? x.Name)
-          .SetProperty(x => x.DueDate, x => cardDTO.DueDate ?? x.DueDate)
-          .SetProperty(x => x.DueComplete, x => cardDTO.DueComplete ?? x.DueComplete)
-        );
+      var card = await _context.Cards.FindAsync(cardDTO.Id);   
 
-      return;
+      if(card == null) return null;
+
+      card.Name = cardDTO.Name ?? card.Name;
+      card.Description = cardDTO.Description ?? card.Description;
+      card.DueDate = cardDTO.DueDate ?? card.DueDate;
+      card.DueComplete = cardDTO.DueComplete ?? card.DueComplete;
+
+      await _context.SaveChangesAsync();
+
+      return card;
     }
 
     public async Task CloseCard(int id)

@@ -79,9 +79,9 @@ namespace negare_kanban_api.Controllers
     {
       try
       {
-        await _cardService.UpdateCard(cardDTO);
+        var card = await _cardService.UpdateCard(cardDTO);
 
-        return NoContent();
+        return Ok(card);
       }
       catch (Exception e)
       {

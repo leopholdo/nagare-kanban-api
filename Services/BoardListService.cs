@@ -22,12 +22,13 @@ namespace negare_kanban_api.Services.BoardListService
     }
 
     public async Task<List<BoardList>> GetBoardLists(int boardId)
-    {
+    {      
       var boardLists = await _context.BoardLists
         .Where(bl => bl.Board.Id == boardId)
         .Include(bl => bl.Cards.OrderBy(c => c.Position))
         .OrderBy(bl => bl.Position)
-        .AsNoTracking().ToListAsync();
+        .AsNoTracking()
+        .ToListAsync();
 
       return boardLists;
     }
